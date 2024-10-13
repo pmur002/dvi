@@ -1,0 +1,10 @@
+Package: dvi
+Type: Package
+Title: Read DVI Files
+Version: 0.1-0
+Authors@R: person("Paul", "Murrell", email = "paul@stat.auckland.ac.nz",
+                  role = c("aut", "cre"))
+Maintainer: Paul Murrell <paul@stat.auckland.ac.nz>
+Description: Functions to generate read DVI files, as produced from TeX documents.
+Imports: hexView (>= 0.3-4)
+License: GPL-3
