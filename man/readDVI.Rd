@@ -7,11 +7,15 @@
   Read a DVI file (produced by LaTeX) into R. 
 }
 \usage{
-readDVI(f)
+readDVI(f, engine=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{f}{A character value giving the name of a DVI file.}
+  \item{engine}{The TeX engine that was used to produce the DVI file.
+    Should be one of \code{"pdfTeX"}, \code{"LuaTeX"}, \code{"XeTeX"},
+    or \code{"upTeX"} (case is ignored). If \code{NULL} (the default),
+    will be guessed from the DVI file.}
 }
 \value{
   A \code{"DVI"} object.
