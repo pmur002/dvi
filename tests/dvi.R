@@ -1,10 +1,10 @@
 
 library(dvi)
 
-readDVI(system.file("DVI", "test-pdf.dvi", package="dvi"))
+readDVI(system.file("DVI", "test-pdftex.dvi", package="dvi"))
 
-readDVI(system.file("DVI", "test-lua.dvi", package="dvi"))
+readDVI(system.file("DVI", "test-luatex.dvi", package="dvi"))
 
-readDVI(system.file("DVI", "test-xe.xdv", package="dvi"))
+readDVI(system.file("DVI", "test-xetex.xdv", package="dvi"))
 
-readDVI(system.file("DVI", "test-up.dvi", package="dvi"))
+readDVI(system.file("DVI", "test-uptex.dvi", package="dvi"))
