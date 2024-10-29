@@ -404,5 +404,5 @@ printDVI <- function(op) {
 ## User API
 
 print.DVI <- function(x, ...) {
-    invisible(lapply(x, printDVI))
+    invisible(lapply(x$raw, printDVI))
 }
