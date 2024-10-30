@@ -254,6 +254,15 @@ named list()
 
 
 > 
+> opNames(opCodes(dvi))
+ [1] "pre"          "bop"          "right3"       "down3"        "xxx1"        
+ [6] "xxx1"         "xxx1"         "y4"           "push"         "z4"          
+[11] "y0"           "push"         "z0"           "xxx1"         "down3"       
+[16] "push"         "push"         "push"         "fnt_def1"     "fnt_num_7"   
+[21] "set_char_116" "set_char_101" "set_char_115" "set_char_116" "pop"         
+[26] "pop"          "pop"          "pop"          "pop"          "eop"         
+[31] "post"         "fnt_def1"     "post_post"   
+> 
 > proc.time()
    user  system elapsed 
-  0.109   0.018   0.124 
+  0.126   0.003   0.127 

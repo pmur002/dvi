@@ -1,6 +1,7 @@
 \name{opCodes}
 \alias{opCodes}
 \alias{opParams}
+\alias{opNames}
 \title{
   Extract Operation Codes and Parameters
 }
@@ -11,10 +12,12 @@
 \usage{
 opCodes(dvi)
 opParams(dvi)
+opNames(codes)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{dvi}{A \code{"DVI"} object.}
+  \item{codes}{A numeric vector.}
 }
 \value{
   \code{opCodes} returns a numeric vector of operation codes.
