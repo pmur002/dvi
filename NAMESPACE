@@ -1,7 +1,10 @@
 
 import("hexView")
 
-export("readDVI")
+export("readDVI",
+       
+       "opCodes",
+       "opParams")
 
 S3method("print", "DVI")
 

@@ -20,22 +20,14 @@ readDVI(file)
   a nice human-readable format.
 }
 \details{
-  A \code{"DVI"} object  is a list with two components:
-  
-  \describe{
-    \item{raw}{A list of memory blocks (as produced by functions from
-      the \pkg{hexView} package), with one block per DVI operation.
+  A \code{"DVI"} object is a list of memory blocks (as produced by
+  functions from 
+  the \pkg{hexView} package), with one block per DVI operation.
       
-      This is the detailed, byte-level contents of the DVI file.}
-    
-    \item{ops}{A list of DVI operations.  Each component is a list with
-      a \code{code} component, which gives the operation code, and a
-      \code{params} component, which is a list of parameters (that
-      depends on the \code{code}).
-
-      This representation is more useful for further processing
-      of the operations in the DVI file.}
-  }
+  This is the detailed, byte-level contents of the DVI file.
+  The functions \code{\link{opCodes}} and \code{\link{opParams}}
+  are provided for extracting the main information from the DVI
+  file in a simpler format.
 }
 \author{
   Paul Murrell
