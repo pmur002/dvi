@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Paul Murrell" />
+
+
+<title>The {dvi} Package</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">The {dvi} Package</h1>
+<h4 class="author">Paul Murrell</h4>
+
+
+
+<p><em>The {dvi} package reads the DVI files that are produced by TeX
+engines. It produces a human-friendly print out of the contents of a DVI
+file and it generates an R list representing the contents of a DVI file.
+This is useful for inspecting and debugging DVI files and for processing
+DVI files in R.</em></p>
+<div id="what-is-a-dvi-file" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> What is a DVI
+file?</h1>
+<p>In typical modern usage of LaTeX <span class="citation">(Lamport
+1994)</span>, the more convenient front-end to the TeX typesetting
+system <span class="citation">(Knuth 1984)</span>, a source LaTeX
+document is processed directly to a typeset PDF document for viewing and
+printing. For example, suppose we have a LaTeX file called
+<code>demo.tex</code>, which is shown below.</p>
+<pre><code>\documentclass{standalone}
+\begin{document}
+\Large
+This is \LaTeX
+\end{document}</code></pre>
+<p>The following command processes the LaTeX file and produces a PDF
+document called <code>demo.pdf</code>, which is shown below the
+command.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="ex">pdflatex</span> demo.tex</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /></p>
+<p>However, we do not have to directly produce a PDF document. For
+example, instead of producing a PDF document, the following command
+produces a DVI file called <code>demo.dvi</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">latex</span> demo.tex</span></code></pre></div>
+<p>This DVI file is a “device independent” intermediate format that
+contains information from typesetting the LaTeX document: which fonts to
+use, which glyphs to use from those fonts, and the position of each
+glyph <span class="citation">(Fuchs 1981)</span>.</p>
+<p>A DVI file can be processed to create a variety of formats for
+viewing and printing. For example, the following command processes the
+DVI file called <code>demo.dvi</code> to produce a PDF document, similar
+to the one that we created above.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">dvipdf</span> demo.dvi demo-dvi.pdf</span></code></pre></div>
+<p>The command below processes the DVI file called <code>demo.dvi</code>
+to produce a PostScript document instead of a PDF document. The
+PostScript document, called <code>demo.ps</code>, is shown below the
+command.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">dvips</span> <span class="at">-E</span> demo.dvi </span></code></pre></div>
+<p><img src="data:image/png;base64,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" /></p>
+</div>
+<div id="viewing-dvi-files" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Viewing DVI files</h1>
+<p>The DVI file format is binary, so to most software the contents of
+the DVI file <code>demo.dvi</code> are just a series of bytes. The first
+102 bytes of <code>demo.dvi</code> are shown below.</p>
+<pre><code> 0  :  f7 02 01 83 92 c0 1c 3b 00 00 00 00 03 e8 1b 20  |  .......;....... 
+16  :  54 65 58 20 6f 75 74 70 75 74 20 32 30 32 34 2e  |  TeX output 2024.
+32  :  31 30 2e 33 31 3a 31 36 34 31 8b 00 00 00 01 00  |  10.31:1641......
+48  :  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  |  ................
+64  :  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  |  ................
+80  :  00 00 00 ff ff ff ff 91 b7 ba e1 9f b7 ba e1 ef  |  ................
+96  :  1f 70 61 70 65 72                                |  .paper           </code></pre>
+<p>One purpose of the {dvi} package is to print a human-readable version
+of a DVI file. The <code>readDVI()</code> function reads a DVI file into
+R and prints the contents in a readable format. For example, the
+following code reads the DVI file called <code>demo.dvi</code> and
+prints its contents. We can now see that a DVI consists of a series of
+<em>operations</em> (the left column), with some operations having a set
+of <em>parameters</em> (the right column). An unofficial description of
+the DVI file format is available from the <a href="https://web.archive.org/web/20070403030353/http://www.math.umd.edu/~asnowden/comp-cont/dvi.html">Internet
+Archive</a> In the output below, we can see the text from the LaTeX
+source being typeset as a series of <code>set_char</code>
+operations.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">library</span>(dvi)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">readDVI</span>(<span class="st">&quot;demo.dvi&quot;</span>)</span></code></pre></div>
+<pre><code>pre          version=2, num=25400000, den=473628672, mag=1000,
+             comment= TeX output 2024.10.31:1641
+bop          counters=1 0 0 0 0 0 0 0 0 0, p=-1
+right3       b=-4736287
+down3        a=-4736287
+xxx1         k=31
+             x=papersize=81.72525pt,13.09998pt
+xxx1         k=50
+             x=ps::%%HiResBoundingBox: 0 0 81.72525pt 13.09998pt.
+xxx1         k=31
+             x=papersize=81.72525pt,13.09998pt
+y4           a=1073741823 
+push
+z4           a=-1073741823 
+y0 
+push
+z0 
+xxx1         k=26
+             x=header=l3backend-dvips.pro
+down3        a=858520
+push
+push
+push
+down3        a=-203161
+fnt_def_1    fontnum=24, checksum=1487622411, scale=943718, design=786432,
+             fontname=cmr12
+fnt_num_24
+set_char_84  &#39;T&#39;
+set_char_104 &#39;h&#39;
+set_char_105 &#39;i&#39;
+set_char_115 &#39;s&#39;
+w3           b=308015 
+set_char_105 &#39;i&#39;
+set_char_115 &#39;s&#39;
+w0 
+set_char_76  &#39;L&#39;
+push
+down3        a=-197046
+push
+right3       b=-332657
+fnt_def_1    fontnum=7, checksum=1274110073, scale=655360, design=655360,
+             fontname=cmr10
+fnt_num_7
+set_char_65  &#39;A&#39;
+pop
+pop
+right2       b=20263
+fnt_num_24
+set_char_84  &#39;T&#39;
+push
+right3       b=-154040
+down3        a=203161
+set_char_69  &#39;E&#39;
+pop
+right3       b=359157
+set_char_88  &#39;X&#39;
+pop
+pop
+pop
+pop
+pop
+eop
+post
+fnt_def_1    fontnum=24, checksum=1487622411, scale=943718, design=786432,
+             fontname=cmr12
+fnt_def_1    fontnum=7, checksum=1274110073, scale=655360, design=655360,
+             fontname=cmr10
+post_post</code></pre>
+<p>Inspecting a DVI file is useful for understanding how different TeX
+engines work. The DVI file above was generated by the pdfTeX engine
+<span class="citation">(Thành 2000)</span>, which is the modern default.
+The following code typesets the LaTeX document using the XeTeX engine
+instead <span class="citation">(Kew 2008)</span>. The result is an
+“extended” DVI file called <code>demo.xdv</code>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="ex">xelatex</span> <span class="at">-no-pdf</span> demo.tex</span></code></pre></div>
+<p>The following code uses the <code>readDVI()</code> function to read
+and print the file <code>demo.xdv</code>. In this file, the text from
+the LaTeX source is typeset as a series of <code>x_glyph</code>
+operations rather than the <code>set_char</code> operations that we saw
+in <code>demo.dvi</code>.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">readDVI</span>(<span class="st">&quot;demo.xdv&quot;</span>)</span></code></pre></div>
+<pre><code>pre          version=7, num=25400000, den=473628672, mag=1000,
+             comment= XeTeX output 2024.10.31:1641
+bop          counters=1 0 0 0 0 0 0 0 0 0, p=-1
+xxx1         k=47
+             x=pdf:pagesize width 81.46277pt height 13.09679pt
+down3        a=-3877976
+push
+down3        a=-858311
+down3        a=858311
+push
+push
+push
+push
+right3       b=-4736287
+down3        a=-203371
+x_fnt_def    fontnum=25, ptsize=943718
+             fontname=/usr/share/texmf/fonts/opentype/public/lm/lmroman12-regular.otf [0]
+fnt_num_25
+x_glyph      id=104, x=0, y=0
+x_glyph      id=63, x=667209, y=0
+x_glyph      id=66, x=1180591, y=0
+x_glyph      id=98, x=1437283, y=0 
+w3           b=307652 
+x_glyph      id=66, x=0, y=0
+x_glyph      id=98, x=256691, y=0 
+w0 
+x_glyph      id=71, x=0, y=0 
+push
+down3        a=-170603
+push
+right3       b=-339739
+x_fnt_def    fontnum=24, ptsize=655360
+             fontname=/usr/share/texmf/fonts/opentype/public/lm/lmroman10-regular.otf [0]
+fnt_num_24
+x_glyph      id=27, x=0, y=0 
+pop
+pop
+right2       b=10230
+fnt_num_25
+x_glyph      id=104, x=0, y=0 
+push
+right3       b=-157319
+down3        a=203371
+x_glyph      id=49, x=0, y=0 
+pop
+right3       b=353233
+x_glyph      id=115, x=0, y=0 
+pop
+pop
+pop
+pop
+pop
+eop
+post
+x_fnt_def    fontnum=25, ptsize=943718
+             fontname=/usr/share/texmf/fonts/opentype/public/lm/lmroman12-regular.otf [0]
+x_fnt_def    fontnum=24, ptsize=655360
+             fontname=/usr/share/texmf/fonts/opentype/public/lm/lmroman10-regular.otf [0]
+post_post</code></pre>
+<p>The {dvi} package can read DVI files that are generated by any of the
+following TeX engines: pdfTeX, e-upTeX <span class="citation">(e-upTeX
+Development Team 2024)</span>, LuaTeX <span class="citation">(Henkel et
+al. 2024)</span>, and XeTeX.</p>
+</div>
+<div id="accessing-dvi-files" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Accessing DVI
+files</h1>
+<p>The return value from the <code>readDVI()</code> function is a
+<code>&quot;DVI&quot;</code> object, which is a list of the DVI operations from
+the DVI file in R object form. Each component of the list, each DVI
+operation, is a low-level memory block object. For example, the first
+operation in the <code>demo.dvi</code> file is shown below.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>dvi <span class="ot">&lt;-</span> <span class="fu">readDVI</span>(<span class="st">&quot;demo.dvi&quot;</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>dvi[[<span class="dv">1</span>]]</span></code></pre></div>
+<pre><code>=======op.opcode 
+ 0  :  f7                                                  |  247             
+=======op.opparams.i 
+ 1  :  02                                                  |  2               
+=======op.opparams.num 
+ 2  :  01 83 92 c0                                         |  25400000 
+=======op.opparams.den 
+ 6  :  1c 3b 00 00                                         |  473628672 
+=======op.opparams.mag 
+10  :  00 00 03 e8                                         |  1000           
+=======op.opparams.comment.length 
+14  :  1b                                                  |  27             
+=======op.opparams.comment.string 
+15  :  20 54 65 58 20 6f 75 74 70 75 74 20 32 30 32 34 2e  |   TeX output 2024.
+32  :  31 30 2e 33 31 3a 31 36 34 31                       |  10.31:1641        </code></pre>
+<p>The values within the memory block can be accessed using functions
+from the {hexView} package, but three convenience functions are provided
+to get access to the most important values. The <code>opCode()</code>
+function returns all of the operation codes from a <code>&quot;DVI&quot;</code>
+object, as a numeric vector, the <code>opNames()</code> function
+converts codes to slightly more interpretable operation names, and the
+<code>opParams()</code> function returns all of the operation parameters
+as a list of named lists. For example, the following code extracts all
+of the operation codes from the DVI file <code>demo.dvi</code>, converts
+them to operation names, and then displays the parameters for the first
+operation.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>codes <span class="ot">&lt;-</span> <span class="fu">opCodes</span>(dvi)</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>codes</span></code></pre></div>
+<pre><code> [1] 247 139 145 159 239 239 239 165 141 170 161 141 166 239 159 141 141 141 159
+[20] 243 195  84 104 105 115 150 105 115 147  76 141 159 141 145 243 178  65 142
+[39] 142 144 195  84 141 145 159  69 142 145  88 142 142 142 142 142 140 248 243
+[58] 243 249</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">opNames</span>(codes)</span></code></pre></div>
+<pre><code> [1] &quot;pre&quot;          &quot;bop&quot;          &quot;right3&quot;       &quot;down3&quot;        &quot;xxx1&quot;        
+ [6] &quot;xxx1&quot;         &quot;xxx1&quot;         &quot;y4&quot;           &quot;push&quot;         &quot;z4&quot;          
+[11] &quot;y0&quot;           &quot;push&quot;         &quot;z0&quot;           &quot;xxx1&quot;         &quot;down3&quot;       
+[16] &quot;push&quot;         &quot;push&quot;         &quot;push&quot;         &quot;down3&quot;        &quot;fnt_def1&quot;    
+[21] &quot;fnt_num_24&quot;   &quot;set_char_84&quot;  &quot;set_char_104&quot; &quot;set_char_105&quot; &quot;set_char_115&quot;
+[26] &quot;w3&quot;           &quot;set_char_105&quot; &quot;set_char_115&quot; &quot;w0&quot;           &quot;set_char_76&quot; 
+[31] &quot;push&quot;         &quot;down3&quot;        &quot;push&quot;         &quot;right3&quot;       &quot;fnt_def1&quot;    
+[36] &quot;fnt_num_7&quot;    &quot;set_char_65&quot;  &quot;pop&quot;          &quot;pop&quot;          &quot;right2&quot;      
+[41] &quot;fnt_num_24&quot;   &quot;set_char_84&quot;  &quot;push&quot;         &quot;right3&quot;       &quot;down3&quot;       
+[46] &quot;set_char_69&quot;  &quot;pop&quot;          &quot;right3&quot;       &quot;set_char_88&quot;  &quot;pop&quot;         
+[51] &quot;pop&quot;          &quot;pop&quot;          &quot;pop&quot;          &quot;pop&quot;          &quot;eop&quot;         
+[56] &quot;post&quot;         &quot;fnt_def1&quot;     &quot;fnt_def1&quot;     &quot;post_post&quot;   </code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">opParams</span>(dvi)[[<span class="dv">1</span>]]</span></code></pre></div>
+<pre><code>$i
+[1] 2
+
+$num
+[1] 25400000
+
+$den
+[1] 473628672
+
+$mag
+[1] 1000
+
+$comment.length
+[1] 27
+
+$comment.string
+ [1] &quot; &quot; &quot;T&quot; &quot;e&quot; &quot;X&quot; &quot; &quot; &quot;o&quot; &quot;u&quot; &quot;t&quot; &quot;p&quot; &quot;u&quot; &quot;t&quot; &quot; &quot; &quot;2&quot; &quot;0&quot; &quot;2&quot; &quot;4&quot; &quot;.&quot; &quot;1&quot; &quot;0&quot;
+[20] &quot;.&quot; &quot;3&quot; &quot;1&quot; &quot;:&quot; &quot;1&quot; &quot;6&quot; &quot;4&quot; &quot;1&quot;</code></pre>
+</div>
+<div id="processing-dvi-files" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Processing DVI
+files</h1>
+<p>We can process the <code>&quot;DVI&quot;</code> object that
+<code>readDVI()</code> produces to explore the typeset information that
+the TeX engines produce. As a very simple example, the following code
+determines the number of pages in the DVI file <code>demo.dvi</code> by
+counting the number of <code>&quot;bop&quot;</code> (beginning of page) operations
+in the file.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>numPages <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">opNames</span>(codes) <span class="sc">==</span> <span class="st">&quot;bop&quot;</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>numPages</span></code></pre></div>
+<pre><code>[1] 1</code></pre>
+<p>As a much more complicated example, the following code extracts font
+and glyph information from the <code>demo.xdv</code> file and draws the
+first four glyphs in R (bottom-left aligned in the centre of the image).
+The code also draws a label at the bottom of the image to show that this
+is an image drawn by R as opposed to the images drawn by TeX tools like
+<code>pdflatex</code> or <code>dvipdf</code> that we saw in Section
+1.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>xdv <span class="ot">&lt;-</span> <span class="fu">readDVI</span>(<span class="st">&quot;demo.xdv&quot;</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>codes <span class="ot">&lt;-</span> <span class="fu">opCodes</span>(xdv)</span>
+<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">opNames</span>(codes)</span>
+<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">opParams</span>(xdv)</span>
+<span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a>pre <span class="ot">&lt;-</span> params[names <span class="sc">==</span> <span class="st">&quot;pre&quot;</span>][[<span class="dv">1</span>]]</span>
+<span id="cb23-6"><a href="#cb23-6" tabindex="-1"></a>fontDef <span class="ot">&lt;-</span> params[names <span class="sc">==</span> <span class="st">&quot;x_fnt_def&quot;</span>][[<span class="dv">1</span>]]</span>
+<span id="cb23-7"><a href="#cb23-7" tabindex="-1"></a>glyphs <span class="ot">&lt;-</span> params[names <span class="sc">==</span> <span class="st">&quot;x_glyph&quot;</span>][[<span class="dv">1</span>]]</span>
+<span id="cb23-8"><a href="#cb23-8" tabindex="-1"></a>convertX <span class="ot">&lt;-</span> <span class="cf">function</span>(x, state) {</span>
+<span id="cb23-9"><a href="#cb23-9" tabindex="-1"></a>    factor <span class="ot">&lt;-</span> <span class="fu">with</span>(pre, num<span class="sc">/</span>den<span class="sc">*</span><span class="dv">1000</span><span class="sc">/</span>mag<span class="sc">/</span><span class="dv">10</span><span class="sc">^</span><span class="dv">4</span>)</span>
+<span id="cb23-10"><a href="#cb23-10" tabindex="-1"></a>    x<span class="sc">*</span>factor<span class="sc">/</span><span class="fl">25.4</span><span class="sc">*</span><span class="dv">72</span></span>
+<span id="cb23-11"><a href="#cb23-11" tabindex="-1"></a>}</span>
+<span id="cb23-12"><a href="#cb23-12" tabindex="-1"></a>font <span class="ot">&lt;-</span> <span class="fu">glyphFont</span>(<span class="at">file=</span><span class="fu">paste</span>(fontDef<span class="sc">$</span>fontinfo.marker.fontname.block, </span>
+<span id="cb23-13"><a href="#cb23-13" tabindex="-1"></a>                             <span class="at">collapse=</span><span class="st">&quot;&quot;</span>), </span>
+<span id="cb23-14"><a href="#cb23-14" tabindex="-1"></a>                  <span class="at">index=</span>fontDef<span class="sc">$</span>fontinfo.marker.fontindex, </span>
+<span id="cb23-15"><a href="#cb23-15" tabindex="-1"></a>                  <span class="at">family=</span><span class="st">&quot;&quot;</span>, <span class="at">weight=</span><span class="dv">400</span>, <span class="at">style=</span><span class="st">&quot;plain&quot;</span>)</span>
+<span id="cb23-16"><a href="#cb23-16" tabindex="-1"></a>info <span class="ot">&lt;-</span> <span class="fu">glyphInfo</span>(<span class="at">id=</span>glyphs<span class="sc">$</span>glyphs.id, </span>
+<span id="cb23-17"><a href="#cb23-17" tabindex="-1"></a>                  <span class="at">x=</span><span class="fu">convertX</span>(<span class="fu">c</span>(glyphs<span class="sc">$</span>glyphs.xy1, </span>
+<span id="cb23-18"><a href="#cb23-18" tabindex="-1"></a>                               glyphs<span class="sc">$</span>glyphs.xy3, </span>
+<span id="cb23-19"><a href="#cb23-19" tabindex="-1"></a>                               glyphs<span class="sc">$</span>glyphs.xy5, </span>
+<span id="cb23-20"><a href="#cb23-20" tabindex="-1"></a>                               glyphs<span class="sc">$</span>glyphs.xy7)),</span>
+<span id="cb23-21"><a href="#cb23-21" tabindex="-1"></a>                  <span class="at">y=</span><span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">4</span>), </span>
+<span id="cb23-22"><a href="#cb23-22" tabindex="-1"></a>                  <span class="at">font=</span><span class="dv">1</span>, </span>
+<span id="cb23-23"><a href="#cb23-23" tabindex="-1"></a>                  <span class="at">size=</span><span class="fu">convertX</span>(fontDef<span class="sc">$</span>ptsize), </span>
+<span id="cb23-24"><a href="#cb23-24" tabindex="-1"></a>                  <span class="at">fontList=</span><span class="fu">glyphFontList</span>(font),</span>
+<span id="cb23-25"><a href="#cb23-25" tabindex="-1"></a>                  <span class="at">width=</span><span class="dv">20</span>, <span class="at">height=</span><span class="dv">10</span>)</span>
+<span id="cb23-26"><a href="#cb23-26" tabindex="-1"></a><span class="fu">library</span>(grid)</span>
+<span id="cb23-27"><a href="#cb23-27" tabindex="-1"></a><span class="fu">grid.newpage</span>()</span>
+<span id="cb23-28"><a href="#cb23-28" tabindex="-1"></a><span class="fu">grid.glyph</span>(info, <span class="at">hjust=</span><span class="dv">0</span>, <span class="at">vjust=</span><span class="dv">0</span>)</span>
+<span id="cb23-29"><a href="#cb23-29" tabindex="-1"></a><span class="fu">grid.text</span>(<span class="st">&quot;This is R&quot;</span>, <span class="at">y=</span><span class="fu">unit</span>(.<span class="dv">5</span>, <span class="st">&quot;lines&quot;</span>), <span class="at">gp=</span><span class="fu">gpar</span>(<span class="at">cex=</span>.<span class="dv">5</span>))</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Drawing the complete typeset result from the DVI file is a lot more
+involved, so that is left to other packages. Some experiments along
+those lines include the <a href="https://github.com/pmur002/dvir">{dvir}</a> package <span class="citation">(Murrell 2018, 2020b, 2020a)</span> and the <a href="https://github.com/pmur002/latex">{latex}</a> package (under
+development).</p>
+</div>
+<div id="related-tools" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Related tools</h1>
+<p>It is possible to view the contents of DVI files, in a human readable
+format, using tools that are typically part of a TeX distribution (e.g.,
+<a href="https://www.tug.org/texlive/">TeX Live</a>). For example,
+<code>dvitype</code>, <code>dv2dt</code>, and <code>dviasm</code>
+produce a text version of a binary DVI file. The latter also allows
+editing the text and converting back to a binary DVI file, plus there is
+a <code>dt2dv</code> partner for <code>dv2dt</code>.</p>
+<p>The main difference compared to viewing the contents of a DVI file
+with <code>readDVI()</code> is the format of the text. There is no
+function in the {dvi} package to regenerate a binary DVI from a
+human-readable version.</p>
+<p>We saw in Section 1 that there are TeX tools like <code>dvipdf</code>
+and <code>dvips</code> for generating PDF or PostScript documents from
+DVI files.</p>
+<p>The {patchDVI} package <span class="citation">(Murdoch 2024)</span>
+is another R package that can read DVI files. This package is focused on
+a specific processing task for the information within DVI files
+(providing links between rendered typeset output and the original source
+file). It has a <code>readDVI()</code> function, but that only prints a
+limited subset of the operations within a DVI file and does not return
+an R object.</p>
+<p>In Section 4, we saw that the return value from
+<code>readDVI()</code> is an R object that can be used for processing
+the contents of a DVI file. Essentially, this means that tools for
+working with DVI files can be developed in R, including tools for
+rendering DVI files as part of R graphics output.</p>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-euptex:dev" class="csl-entry">
+e-upTeX Development Team. 2024. <em><span class="nocase">e-upTeX</span>:
+An Extended Version of upTeX</em>. <a href="https://ctan.org/pkg/euptex">https://ctan.org/pkg/euptex</a>.
+</div>
+<div id="ref-Fuchs:TB2-2-12" class="csl-entry">
+Fuchs, David. 1981. <span>“<span class="nocase">The format of
+<span>TeX</span>’s DVI files, Version I</span>.”</span>
+<em><span>TUG</span>boat</em> 2 (2, 3): 12–16. <a href="https://tug.org/TUGboat/tb02-2/tb03fuchsdvi.pdf">https://tug.org/TUGboat/tb02-2/tb03fuchsdvi.pdf</a>.
+</div>
+<div id="ref-luatex:manual" class="csl-entry">
+Henkel, Hartmut, Taco Hoekwater, Hans Hagen, and Luigi Scarso. 2024.
+<em><span>LuaTeX</span> Reference Manual</em>. <a href="http://www.luatex.org">http://www.luatex.org</a>.
+</div>
+<div id="ref-xetex:kew2008" class="csl-entry">
+Kew, Jonathan. 2008. <em><span>XeTeX</span>: A
+<span>T</span>e<span>X</span> System for Unicode and OpenType
+Fonts</em>. <a href="http://xetex.sourceforge.net/">http://xetex.sourceforge.net/</a>.
+</div>
+<div id="ref-tex:knuth1984" class="csl-entry">
+Knuth, Donald E. 1984. <em><span>The TeXbook</span></em>. Computers
+&amp; Typesetting, Vol. <span>A</span>. Reading, Massachusetts:
+Addison-Wesley.
+</div>
+<div id="ref-latex:lamport1994" class="csl-entry">
+Lamport, Leslie. 1994. <em><span>LaTeX: A Document Preparation
+System</span></em>. 2nd ed. Reading, Massachusetts: Addison-Wesley.
+</div>
+<div id="ref-pkg-patchDVI" class="csl-entry">
+Murdoch, Duncan. 2024. <em>patchDVI: Package to Patch ’.dvi’ or
+’.synctex’ Files</em>. <a href="https://CRAN.R-project.org/package=patchDVI">https://CRAN.R-project.org/package=patchDVI</a>.
+</div>
+<div id="ref-murrell-dvir" class="csl-entry">
+Murrell, Paul. 2018. <span>“Revisiting Mathematical Equations in
+<span>R</span>: The ’<span class="nocase">dvir</span>’ Package.”</span>
+2018-08. Department of Statistics, The University of Auckland. <a href="https://stattech.wordpress.fos.auckland.ac.nz/2018/08/31/2018-08-revisiting-mathematical-equations-in-r-the-dvir-package/">https://stattech.wordpress.fos.auckland.ac.nz/2018/08/31/2018-08-revisiting-mathematical-equations-in-r-the-dvir-package/</a>.
+</div>
+<div id="ref-murrell-dvir-tikz-2020" class="csl-entry">
+———. 2020a. <span>“Adding TikZ Support to ’<span class="nocase">dvir</span>’.”</span> 2020-05. Department of Statistics,
+The University of Auckland. <a href="https://stattech.blogs.auckland.ac.nz/2020/11/25/2020-05-adding-tikz-support-to-dvir">https://stattech.blogs.auckland.ac.nz/2020/11/25/2020-05-adding-tikz-support-to-dvir</a>.
+</div>
+<div id="ref-murrell-dvir-luatex-2020" class="csl-entry">
+———. 2020b. <span>“The Agony and the Ecstacy: Adding LuaTeX Support to
+’<span class="nocase">dvir</span>’.”</span> 2020-02. Department of
+Statistics, The University of Auckland. <a href="http://stattech.blogs.auckland.ac.nz/2020/04/16/2020-02-the-agony-and-the-ecstacy-adding-luatex-support-to-dvir">http://stattech.blogs.auckland.ac.nz/2020/04/16/2020-02-the-agony-and-the-ecstacy-adding-luatex-support-to-dvir</a>.
+</div>
+<div id="ref-pdftex:thanh2000" class="csl-entry">
+Thành, Hàn Thê. 2000. <span>“<span class="nocase">pdfTeX: Extending TeX
+to Generate PDF Directly</span>.”</span> PhD thesis, Brno, Czech
+Republic: Masaryk University, Brno. <a href="http://www.pdftex.org">http://www.pdftex.org</a>.
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
